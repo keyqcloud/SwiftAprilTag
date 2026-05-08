@@ -1,0 +1,13 @@
+SwiftAprilTag includes source code from the following third-party project:
+
+================================================================================
+AprilTag
+  https://github.com/AprilRobotics/apriltag
+  Copyright (C) 2013-2016, The Regents of The University of Michigan.
+  Licensed under the BSD 2-Clause License.
+  See LICENSE-AprilRobotics.md for the full license text.
+================================================================================
+
+The vendored AprilTag C source files live under Sources/CAprilTag/ and retain
+their original BSD 2-Clause license. The Swift wrapper code under
+Sources/SwiftAprilTag/ is provided under the MIT License (see LICENSE).

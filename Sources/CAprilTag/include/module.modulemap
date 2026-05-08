@@ -1,0 +1,15 @@
+module CAprilTag {
+    header "apriltag.h"
+    header "apriltag_pose.h"
+    header "tag36h11.h"
+    header "tag25h9.h"
+    header "tag16h5.h"
+    header "tag36h10.h"
+    header "tagCircle21h7.h"
+    header "tagCircle49h12.h"
+    header "tagCustom48h12.h"
+    header "tagStandard41h12.h"
+    header "tagStandard52h13.h"
+    export *
+    link "pthread"
+}
