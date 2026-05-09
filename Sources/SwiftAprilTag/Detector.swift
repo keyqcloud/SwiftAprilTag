@@ -7,7 +7,6 @@
 //
 
 import CAprilTag
-import CoreGraphics
 import Foundation
 
 /// Errors thrown by `Detector`.

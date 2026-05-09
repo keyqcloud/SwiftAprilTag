@@ -6,11 +6,14 @@
 //  Licensed under the MIT License. See LICENSE for details.
 //
 
-import CoreGraphics
 import Foundation
 
 /// A single AprilTag detection in image-pixel coordinates.
-public struct Detection: Sendable, Equatable, Hashable {
+///
+/// `CGPoint` here is the basic struct from Foundation (a pair of CGFloats),
+/// available on every Swift platform including Linux. We do not import
+/// CoreGraphics because that module is Apple-only.
+public struct Detection: Sendable, Equatable {
     /// The decoded tag ID within its family.
     public let id: Int
 
