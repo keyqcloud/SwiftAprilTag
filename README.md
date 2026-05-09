@@ -71,7 +71,19 @@ func captureOutput(_ output: AVCaptureOutput,
 }
 ```
 
-### Detect tags in raw luminance data
+### Detect tags in a UIImage or CGImage
+
+```swift
+let detector = try Detector(families: [.tag36h11])
+
+// UIImage (iOS / tvOS / Mac Catalyst)
+let detections = try detector.detect(uiImage: someUIImage)
+
+// CGImage (any Apple platform)
+let detections = try detector.detect(cgImage: someCGImage)
+```
+
+### Detect tags in raw luminance data (cross-platform)
 
 ```swift
 let detector = try Detector(families: [.tag36h11])
@@ -82,6 +94,20 @@ let detections = try detector.detect(
     height: 480,
     stride: 640              // optional; defaults to width
 )
+```
+
+### Draw a detection on a CALayer / SwiftUI Path
+
+```swift
+// CALayer overlay
+let shape = CAShapeLayer()
+shape.path = detection.cgPath
+shape.strokeColor = UIColor.green.cgColor
+shape.fillColor = UIColor.green.withAlphaComponent(0.2).cgColor
+
+// SwiftUI
+import SwiftUI
+let path = Path(detection.cgPath)
 ```
 
 ### Configure the detector
@@ -100,7 +126,15 @@ detector.decodeSharpening = 0.25 // default; helps with small tags
 Given a detection plus your camera's intrinsics and the tag's known physical size, recover the rotation and translation of the tag in the camera's coordinate frame. Useful for AR placement, robot-arm alignment, and pose-based calibration.
 
 ```swift
+// Manual intrinsics
 let intrinsics = CameraIntrinsics(fx: 800, fy: 800, cx: 320, cy: 240)
+
+// Or from AVFoundation, with optional rescaling to your processing image size:
+let intrinsics = CameraIntrinsics(
+    avCalibrationData: depthData.cameraCalibrationData!,
+    imageSize: CGSize(width: 1280, height: 720)
+)
+
 let tagSize = 0.1 // meters — outer black border edge length
 
 if let pose = detection.estimatePose(intrinsics: intrinsics, tagSize: tagSize) {

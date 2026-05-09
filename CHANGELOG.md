@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-05-10
+
+### Added
+- `Detector.detect(cgImage:)` — Apple-platform convenience that takes
+  any `CGImage`, renders it to 8-bit grayscale internally, and runs
+  detection. Saves callers from doing the conversion themselves.
+- `Detector.detect(uiImage:)` — UIKit convenience (iOS, tvOS, Mac
+  Catalyst) that unwraps the underlying `CGImage` and forwards.
+- `Detection.cgPath` — closed `CGPath` of the detected corner polygon,
+  ready to assign to `CAShapeLayer.path` or wrap with `Path(cgPath)`
+  for SwiftUI overlays.
+- `CameraIntrinsics(avCalibrationData:imageSize:)` — convenience
+  initializer from AVFoundation's `AVCameraCalibrationData`, with
+  automatic rescaling between the calibration's reference dimensions
+  and the actual image size you used for detection.
+- New integration test exercising `detect(cgImage:)` and verifying
+  `cgPath` produces the expected bounding box.
+
 ## [1.1.0] - 2026-05-10
 
 ### Added
@@ -80,7 +98,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT-licensed Swift wrapper code.
 - iOS 15+, macOS 12+, Mac Catalyst 15+, and tvOS 15+ support.
 
-[Unreleased]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.0.0...v1.0.1

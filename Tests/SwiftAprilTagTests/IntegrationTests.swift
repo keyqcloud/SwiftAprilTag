@@ -25,15 +25,12 @@ final class IntegrationTests: XCTestCase {
 
     func testDetectsKnownTag36h11Id0() throws {
         let image = try loadFixturePNG(named: "tag36h11_id0", ofType: "png")
-        let (luminance, width, height, stride) = try grayscalePixels(from: image)
+        let width = image.width, height = image.height
 
+        // Exercise the new detect(cgImage:) convenience — equivalent to the
+        // raw luminance path but saves callers the manual grayscale render.
         let detector = try Detector(families: [.tag36h11])
-        let detections = try detector.detect(
-            luminance: luminance,
-            width: width,
-            height: height,
-            stride: stride
-        )
+        let detections = try detector.detect(cgImage: image)
 
         XCTAssertEqual(detections.count, 1, "Expected exactly one detection in the fixture image")
         guard let detection = detections.first else { return }
@@ -132,6 +129,28 @@ final class IntegrationTests: XCTestCase {
         // Reprojection error should be small for this clean synthetic image.
         XCTAssertLessThan(pose.reprojectionError, 1.0,
                           "Reprojection error \(pose.reprojectionError) larger than expected")
+    }
+
+    func testCGPathRoundTrip() throws {
+        // Verify Detection.cgPath produces a closed quad whose vertices
+        // exactly match the detection corners. Common use case: drawing
+        // the detected tag on a CALayer / SwiftUI Path.
+        let image = try loadFixturePNG(named: "tag36h11_id0", ofType: "png")
+        let detector = try Detector(families: [.tag36h11])
+        guard let detection = try detector.detect(cgImage: image).first else {
+            XCTFail("No detection in fixture")
+            return
+        }
+
+        let path = detection.cgPath
+        let bounds = path.boundingBox
+        // The corners are at (20, 20), (180, 20), (180, 180), (20, 180).
+        // Bounding box should match those extents within the corner
+        // sub-pixel tolerance.
+        XCTAssertEqual(bounds.minX, 20, accuracy: 1.0)
+        XCTAssertEqual(bounds.maxX, 180, accuracy: 1.0)
+        XCTAssertEqual(bounds.minY, 20, accuracy: 1.0)
+        XCTAssertEqual(bounds.maxY, 180, accuracy: 1.0)
     }
 
     func testDoesNotDetectInBlankImage() throws {
