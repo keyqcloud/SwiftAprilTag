@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-05-10
+
+### Added
+- End-to-end integration test verifying all eight `tag*` families that
+  ship pre-rendered images upstream (every `TagFamily` enum case except
+  `tag36h10`, which has no upstream `apriltag-imgs` rendering). Each
+  test loads a bundled id-0 fixture, runs detection, and asserts the
+  family decodes its own id 0 with hamming 0 and decisionMargin > 30.
+  Confirms the `TagFamily.createCFamily()` / `destroyCFamily(_:)`
+  plumbing works for every family the wrapper exposes — not just
+  tag36h11.
+
 ## [1.3.0] - 2026-05-10
 
 ### Added
@@ -117,7 +129,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT-licensed Swift wrapper code.
 - iOS 15+, macOS 12+, Mac Catalyst 15+, and tvOS 15+ support.
 
-[Unreleased]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.3.1...HEAD
+[1.3.1]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.0.2...v1.1.0

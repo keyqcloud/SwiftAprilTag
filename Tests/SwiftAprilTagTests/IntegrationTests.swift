@@ -153,6 +153,44 @@ final class IntegrationTests: XCTestCase {
         XCTAssertEqual(bounds.maxY, 180, accuracy: 1.0)
     }
 
+    /// Verify each tag family the wrapper exposes can detect its own id 0.
+    /// This is a thin end-to-end smoke test for every family — the detailed
+    /// corner / pose assertions live in `testDetectsKnownTag36h11Id0`. The
+    /// goal here is only to confirm the C-family-creation plumbing in
+    /// `TagFamily.createCFamily()` / `destroyCFamily(_:)` actually works
+    /// for every case of the enum.
+    ///
+    /// `tag36h10` is supported by the library but is not included in
+    /// upstream AprilRobotics/apriltag-imgs, so we have no fixture for it.
+    func testEachFamilyDetectsItsOwnId0() throws {
+        let casesToTest: [(family: TagFamily, fixture: String)] = [
+            (.tag36h11, "tag36h11_id0"),
+            (.tag25h9, "tag25h9_id0"),
+            (.tag16h5, "tag16h5_id0"),
+            (.tagCircle21h7, "tagCircle21h7_id0"),
+            (.tagCircle49h12, "tagCircle49h12_id0"),
+            (.tagCustom48h12, "tagCustom48h12_id0"),
+            (.tagStandard41h12, "tagStandard41h12_id0"),
+            (.tagStandard52h13, "tagStandard52h13_id0")
+        ]
+
+        for testCase in casesToTest {
+            let image = try loadFixturePNG(named: testCase.fixture, ofType: "png")
+            let detector = try Detector(families: [testCase.family])
+            let detections = try detector.detect(cgImage: image)
+
+            XCTAssertEqual(detections.count, 1,
+                           "Expected exactly one detection for \(testCase.family); got \(detections.count)")
+            guard let detection = detections.first else { continue }
+            XCTAssertEqual(detection.id, 0,
+                           "Fixture \(testCase.fixture) should decode as id 0 in \(testCase.family); got id \(detection.id)")
+            XCTAssertEqual(detection.hamming, 0,
+                           "Clean rendered fixture for \(testCase.family) should decode with hamming 0")
+            XCTAssertGreaterThan(detection.decisionMargin, 30,
+                                 "Decision margin too low for \(testCase.family): \(detection.decisionMargin)")
+        }
+    }
+
     func testDoesNotDetectInBlankImage() throws {
         // Sanity counter-test: a flat-gray image must produce zero detections.
         // This guards against false positives that would render the integration
