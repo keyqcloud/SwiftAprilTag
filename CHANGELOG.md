@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-05-10
+
 ### Added
 - Integration test that loads a real `tag36h11_id0` fixture image, runs
   detection end-to-end, and asserts ID, hamming distance, decision
@@ -56,6 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT-licensed Swift wrapper code.
 - iOS 15+, macOS 12+, Mac Catalyst 15+, and tvOS 15+ support.
 
-[Unreleased]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/keyqcloud/SwiftAprilTag/releases/tag/v1.0.0
