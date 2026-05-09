@@ -1,8 +1,14 @@
 # SwiftAprilTag
 
+[![CI](https://github.com/keyqcloud/SwiftAprilTag/actions/workflows/ci.yml/badge.svg)](https://github.com/keyqcloud/SwiftAprilTag/actions/workflows/ci.yml)
+[![Swift 5.9+](https://img.shields.io/badge/Swift-5.9%2B-orange.svg)](https://swift.org)
+[![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20Mac%20Catalyst%20%7C%20tvOS%20%7C%20Linux-blue.svg)](https://swift.org)
+[![SPM compatible](https://img.shields.io/badge/SPM-compatible-brightgreen.svg)](https://swift.org/package-manager/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A Swift wrapper around the [AprilTag](https://github.com/AprilRobotics/apriltag) fiducial-marker detection library, packaged for Swift Package Manager. Maintained by [KeyQ, Inc.](https://www.keyq.cloud)
 
-Supports iOS 15+, macOS 12+, Mac Catalyst 15+, and tvOS 15+.
+Supports iOS 15+, macOS 12+, Mac Catalyst 15+, tvOS 15+, and Linux (Swift 5.9+).
 
 ## Features
 
