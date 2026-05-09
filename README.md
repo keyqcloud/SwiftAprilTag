@@ -10,6 +10,21 @@ A Swift wrapper around the [AprilTag](https://github.com/AprilRobotics/apriltag)
 
 Supports iOS 15+, macOS 12+, Mac Catalyst 15+, tvOS 15+, and Linux (Swift 5.9+).
 
+## Why this package?
+
+[AprilTag](https://april.eecs.umich.edu/software/apriltag) is a robust 2D fiducial-marker system from the APRIL Robotics Lab at the University of Michigan, widely used in robotics, AR/VR, and computer-vision research for tracking, pose estimation, and camera calibration. The reference implementation is a C library; until now there hasn't been a maintained, license-clean Swift wrapper that ships through Swift Package Manager.
+
+SwiftAprilTag was extracted from a real-world iOS body-scanning calibration tool, where it's used to detect a printed reference tag in TrueDepth captures and compute per-device focal-length corrections. The API surface is intentionally small — sub-pixel corner detection in raw or synthetic images, plus a `CVPixelBuffer` convenience for AVFoundation captures.
+
+Reach for SwiftAprilTag when you specifically need:
+
+- **Sub-pixel corner accuracy** (typical ~0.1-0.3px) — the property that makes AprilTag useful for measurement, not just recognition
+- **ID-verified detection** that rejects coincidentally-rectangular objects in the scene
+- **A standardized fiducial format** documented across the robotics and AR/VR ecosystems, so what you build interoperates with other tools
+- **Cross-platform Swift** (iOS, macOS, Linux) with no third-party dependencies
+
+If you only need rough rectangle or QR detection without precision requirements, Apple's `VNDetectRectanglesRequest` and `VNDetectBarcodesRequest` may already be enough.
+
 ## Features
 
 - All standard AprilTag families (`tag36h11`, `tag25h9`, `tag16h5`, `tag36h10`, `tagCircle21h7`, `tagCircle49h12`, `tagCustom48h12`, `tagStandard41h12`, `tagStandard52h13`)
