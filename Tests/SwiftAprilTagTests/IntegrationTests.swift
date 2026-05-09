@@ -78,6 +78,62 @@ final class IntegrationTests: XCTestCase {
         }
     }
 
+    func testEstimatePoseFromKnownFixture() throws {
+        let image = try loadFixturePNG(named: "tag36h11_id0", ofType: "png")
+        let (luminance, width, height, stride) = try grayscalePixels(from: image)
+
+        let detector = try Detector(families: [.tag36h11])
+        let detections = try detector.detect(
+            luminance: luminance,
+            width: width,
+            height: height,
+            stride: stride
+        )
+        guard let detection = detections.first else {
+            XCTFail("No detection in fixture image")
+            return
+        }
+
+        // Synthesize plausible camera intrinsics for this synthetic image:
+        // - 200x200 image
+        // - principal point at the geometric center (100, 100)
+        // - focal length such that a 0.1m tag with 160px pixel-edge length
+        //   would correspond to a tag 0.5m from the camera:
+        //     pixel_edge = tagSize * fx / Z  ⇒  160 = 0.1 * fx / 0.5  ⇒  fx = 800
+        let intrinsics = CameraIntrinsics(fx: 800, fy: 800, cx: 100, cy: 100)
+        let tagSize = 0.1 // meters
+
+        guard let pose = detection.estimatePose(intrinsics: intrinsics, tagSize: tagSize) else {
+            XCTFail("estimatePose returned nil")
+            return
+        }
+
+        // Translation should land near (0, 0, 0.5) — tag is centered in
+        // image, principal point matches, and we constructed fx so that the
+        // observed pixel edge corresponds to 0.5m depth.
+        let tolerance: Float = 0.005 // 5mm
+        XCTAssertEqual(pose.translation[0], 0, accuracy: tolerance, "Tag should be centered horizontally")
+        XCTAssertEqual(pose.translation[1], 0, accuracy: tolerance, "Tag should be centered vertically")
+        XCTAssertEqual(pose.translation[2], 0.5, accuracy: tolerance, "Tag depth should match constructed intrinsics")
+
+        // Rotation should be ~ identity (with the camera convention's sign
+        // pattern). The tag is fronto-parallel; the diagonal entries should
+        // be ±1 and off-diagonals near zero.
+        let rotationTolerance: Float = 0.01
+        for i in [0, 4, 8] {
+            XCTAssertEqual(abs(pose.rotation[i]), 1.0, accuracy: rotationTolerance,
+                           "Rotation diagonal entry \(i) should have magnitude 1")
+        }
+        for i in [1, 2, 3, 5, 6, 7] {
+            XCTAssertEqual(pose.rotation[i], 0, accuracy: rotationTolerance,
+                           "Rotation off-diagonal entry \(i) should be ~0")
+        }
+
+        // Reprojection error should be small for this clean synthetic image.
+        XCTAssertLessThan(pose.reprojectionError, 1.0,
+                          "Reprojection error \(pose.reprojectionError) larger than expected")
+    }
+
     func testDoesNotDetectInBlankImage() throws {
         // Sanity counter-test: a flat-gray image must produce zero detections.
         // This guards against false positives that would render the integration

@@ -29,6 +29,7 @@ If you only need rough rectangle or QR detection without precision requirements,
 
 - All standard AprilTag families (`tag36h11`, `tag25h9`, `tag16h5`, `tag36h10`, `tagCircle21h7`, `tagCircle49h12`, `tagCustom48h12`, `tagStandard41h12`, `tagStandard52h13`)
 - Sub-pixel corner localization
+- **6-DOF pose estimation** from the upstream homography + orthogonal-iteration solver
 - Direct `CVPixelBuffer` luminance-plane support — no color-space conversion needed for AVFoundation captures
 - Configurable detector parameters (thread count, decimation, blur, edge refinement, decode sharpening)
 - Pure Swift API; vendored upstream C source compiles without external dependencies
@@ -93,6 +94,34 @@ detector.quadSigma = 0.8         // blur for noisy images; 0 = no blur
 detector.refineEdges = true      // snap quad edges to gradients (only matters when decimating)
 detector.decodeSharpening = 0.25 // default; helps with small tags
 ```
+
+### Estimate the 6-DOF pose of a detected tag
+
+Given a detection plus your camera's intrinsics and the tag's known physical size, recover the rotation and translation of the tag in the camera's coordinate frame. Useful for AR placement, robot-arm alignment, and pose-based calibration.
+
+```swift
+let intrinsics = CameraIntrinsics(fx: 800, fy: 800, cx: 320, cy: 240)
+let tagSize = 0.1 // meters — outer black border edge length
+
+if let pose = detection.estimatePose(intrinsics: intrinsics, tagSize: tagSize) {
+    // Translation in meters: (x, y, z) in the camera's frame
+    print("Position: \(pose.translation)")
+
+    // Rotation as a row-major 3x3 matrix
+    print("Rotation: \(pose.rotation)")
+
+    // Lower is better; outliers can be filtered with this
+    print("Reprojection error: \(pose.reprojectionError)")
+
+    // On Apple platforms, get the standard simd math types directly:
+    #if canImport(simd)
+    let transform: simd_float4x4 = pose.transform
+    // ...feed straight into SceneKit / RealityKit / Metal
+    #endif
+}
+```
+
+The `tagSize` is the **outer black border** edge length, NOT the full tag image including any white margin. Tag distributors who label tags by overall image size (e.g. `rgov/apriltag-pdfs` "100mm") report margin-inclusive dimensions that don't match what the AprilTag library detects.
 
 ## Generating Tags
 

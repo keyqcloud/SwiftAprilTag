@@ -219,12 +219,30 @@ public final class Detector {
                 CGPoint(x: d.p.3.0, y: d.p.3.1)
             ]
 
+            // Extract the 3x3 homography matrix from the C-side detection
+            // into a row-major [Double]. The C library's matd_t uses a
+            // flexible-array-member layout that's awkward to read directly
+            // from Swift, so we go through the matd_get accessor.
+            var homography = [Double](repeating: 0, count: 9)
+            if let H = d.H {
+                let rows = Int(H.pointee.nrows)
+                let cols = Int(H.pointee.ncols)
+                if rows == 3 && cols == 3 {
+                    for r in 0..<3 {
+                        for c in 0..<3 {
+                            homography[r * 3 + c] = matd_get(H, UInt32(r), UInt32(c))
+                        }
+                    }
+                }
+            }
+
             results.append(Detection(
                 id: Int(d.id),
                 hamming: Int(d.hamming),
                 decisionMargin: d.decision_margin,
                 center: CGPoint(x: d.c.0, y: d.c.1),
-                corners: corners
+                corners: corners,
+                homography: homography
             ))
         }
 

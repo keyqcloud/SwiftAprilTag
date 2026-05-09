@@ -30,21 +30,30 @@ public struct Detection: Sendable, Equatable {
     public let center: CGPoint
 
     /// Tag corners in image pixel coordinates (sub-pixel accuracy).
-    /// Order is counter-clockwise around the tag, starting from the bottom-left
-    /// corner of an upright tag (matching the upstream AprilTag convention).
+    /// Order is counter-clockwise around the tag (matching upstream
+    /// AprilTag convention).
     public let corners: [CGPoint]
+
+    /// 3x3 homography matrix mapping ideal tag coordinates [-1, 1] at the
+    /// outer black-border corners to image pixel coordinates. Stored row-major
+    /// (`homography[row * 3 + col]`). Used by `estimatePose(intrinsics:tagSize:)`
+    /// and exposed publicly for users who want to perform their own custom
+    /// projection, perspective-warp, or homography decomposition.
+    public let homography: [Double]
 
     public init(
         id: Int,
         hamming: Int,
         decisionMargin: Float,
         center: CGPoint,
-        corners: [CGPoint]
+        corners: [CGPoint],
+        homography: [Double]
     ) {
         self.id = id
         self.hamming = hamming
         self.decisionMargin = decisionMargin
         self.center = center
         self.corners = corners
+        self.homography = homography
     }
 }

@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-05-10
+
+### Added
+- **Pose estimation.** New `CameraIntrinsics` and `TagPose` public types,
+  plus `Detection.estimatePose(intrinsics:tagSize:) -> TagPose?` which
+  recovers the 6-DOF pose of a detected tag in the camera's coordinate
+  frame using the upstream homography + orthogonal-iteration solver.
+  `TagPose` exposes the rotation matrix, translation vector, and
+  reprojection error, with Apple-only convenience accessors for
+  `simd_float3x3`, `simd_float3`, and a combined `simd_float4x4`
+  transform suitable for SceneKit/RealityKit/Metal.
+- `Detection.homography` field exposing the 3x3 homography matrix that
+  maps ideal tag corners `[-1, 1]` to image pixel coordinates. Required
+  by pose estimation, also useful for users who want to do their own
+  perspective warps or homography decomposition.
+- README now includes a pose-estimation usage example with a note about
+  the outer-black-border convention.
+- New integration test that recovers the pose of the bundled fixture
+  against synthetic intrinsics and asserts translation within 5mm of
+  the expected value, rotation matrix near identity, and small
+  reprojection error.
+
 ## [1.0.2] - 2026-05-10
 
 ### Added
@@ -58,7 +80,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT-licensed Swift wrapper code.
 - iOS 15+, macOS 12+, Mac Catalyst 15+, and tvOS 15+ support.
 
-[Unreleased]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/keyqcloud/SwiftAprilTag/releases/tag/v1.0.0
