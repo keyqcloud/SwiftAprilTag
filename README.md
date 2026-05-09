@@ -157,6 +157,25 @@ if let pose = detection.estimatePose(intrinsics: intrinsics, tagSize: tagSize) {
 
 The `tagSize` is the **outer black border** edge length, NOT the full tag image including any white margin. Tag distributors who label tags by overall image size (e.g. `rgov/apriltag-pdfs` "100mm") report margin-inclusive dimensions that don't match what the AprilTag library detects.
 
+## Examples
+
+Two ready-to-run demonstrations live in [`Examples/`](Examples/):
+
+- **[`Examples/CLI/`](Examples/CLI/)** — command-line tool. Decodes a tag in any image file and prints the result, with optional pose estimation.
+  ```bash
+  swift run DetectAprilTag path/to/tag.png --tag-size 0.1
+  ```
+- **[`Examples/iOS-Live/`](Examples/iOS-Live/)** — minimal SwiftUI iOS app with live-camera detection, real-time corner overlay, and per-frame 6-DOF pose readout. Source-files-only; drop into a new Xcode project.
+
+## Documentation
+
+Full API documentation is available on the [Swift Package Index](https://swiftpackageindex.com/keyqcloud/SwiftAprilTag/documentation), built automatically from the in-source DocC catalog.
+
+Key articles:
+- [Getting Started](Sources/SwiftAprilTag/SwiftAprilTag.docc/GettingStarted.md)
+- [Pose Estimation](Sources/SwiftAprilTag/SwiftAprilTag.docc/PoseEstimation.md)
+- [Tag Size Convention](Sources/SwiftAprilTag/SwiftAprilTag.docc/TagSizeConvention.md) — read this before printing tags
+
 ## Generating Tags
 
 Pre-rendered tags from the upstream project are available at [github.com/AprilRobotics/apriltag-imgs](https://github.com/AprilRobotics/apriltag-imgs). For physical printing, the PostScript (`.ps`) files print at known dimensions on US Letter / A4 paper. PNG files in those repos are 8x or 10x base sizes — print them at a specific physical size for calibration use cases.

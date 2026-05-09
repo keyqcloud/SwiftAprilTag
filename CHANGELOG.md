@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-05-10
+
+### Added
+- **DocC catalog.** New `Sources/SwiftAprilTag/SwiftAprilTag.docc/` with a
+  module landing page (topic-grouped symbol references), a Getting
+  Started article, a Pose Estimation deep-dive, and a Tag Size Convention
+  article that documents the outer-black-border vs. white-margin pitfall.
+- **`.spi.yml`** to enable hosted DocC documentation on the Swift
+  Package Index. Once the package re-indexes, the docs will be available
+  at https://swiftpackageindex.com/keyqcloud/SwiftAprilTag/documentation.
+- **`Examples/CLI/`** — a self-contained Swift executable that loads an
+  image, runs detection, and optionally estimates pose. Demonstrates the
+  full CGImage path and pose API in <100 lines.
+- **`Examples/iOS-Live/`** — minimal SwiftUI iOS app with live-camera
+  detection, real-time corner overlay drawn on top of an
+  `AVCaptureVideoPreviewLayer`, and per-frame 6-DOF pose readout. Ships
+  as source files only with instructions for dropping into a new Xcode
+  project (avoiding fragile xcodeproj scripting).
+
 ## [1.2.0] - 2026-05-10
 
 ### Added
@@ -98,7 +117,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT-licensed Swift wrapper code.
 - iOS 15+, macOS 12+, Mac Catalyst 15+, and tvOS 15+ support.
 
-[Unreleased]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/keyqcloud/SwiftAprilTag/compare/v1.0.1...v1.0.2

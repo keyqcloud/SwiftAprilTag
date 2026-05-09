@@ -3,6 +3,11 @@
 .swiftpm/
 Package.resolved
 
+# Examples may pull their own build artifacts
+Examples/**/.build/
+Examples/**/.swiftpm/
+Examples/**/Package.resolved
+
 # Xcode
 *.xcodeproj
 *.xcworkspace
