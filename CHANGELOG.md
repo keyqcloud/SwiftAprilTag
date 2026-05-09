@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Integration test that loads a real `tag36h11_id0` fixture image, runs
+  detection end-to-end, and asserts ID, hamming distance, decision
+  margin, and sub-pixel corner positions. Apple-only (gated behind
+  `#if canImport(CoreGraphics) && canImport(ImageIO)`) — Linux CI
+  continues to run the unit tests only.
+- Counter-test verifying a flat gray image produces zero detections,
+  guarding against false-positive regressions.
+- Bundled `Tests/SwiftAprilTagTests/Fixtures/tag36h11_id0.png` (200×200,
+  516 bytes) as a known-good detection target. Derived from the upstream
+  `AprilRobotics/apriltag-imgs` 10×10 native rendering by 20× nearest-
+  neighbor upscale, so the corner positions are exactly predictable.
+
 ## [1.0.1] - 2026-05-09
 
 ### Fixed

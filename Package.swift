@@ -42,7 +42,10 @@ let package = Package(
         .testTarget(
             name: "SwiftAprilTagTests",
             dependencies: ["SwiftAprilTag"],
-            path: "Tests/SwiftAprilTagTests"
+            path: "Tests/SwiftAprilTagTests",
+            resources: [
+                .copy("Fixtures")
+            ]
         )
     ]
 )
